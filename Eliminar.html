@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="EstilosBorrar.css">
+  <title>Formulario Registro</title>
+</head>
+<body>
+  <section class="form-register">
+    <h4>Eliminar página</h4>
+    <p>Al darle click al botón se te abrirá la opción</p>
+    <p>de enviarme un correo, con este</p>
+    <p>sabré que puedo eliminar la página</p>
+    <textarea class="controls" id="textoEsc" placeholder="Aquí puedes escribir algo en el correo, o puedes dejarlo en blanco. "></textarea>
+    <button class="botons" onclick="enviarCorreo()">Eliminar página</button>
+    <p><a href="index.html">No eliminar aún</a></p>
+  </section>
+
+  <script>
+
+    window.onload = function() {
+      alert("Para que te funcione el botón asegurate de tener instalada y configurada la aplicación de correo en tu computadora.");
+    };
+
+    function enviarCorreo() {
+      const mensaje = document.getElementById("textoEsc").value;
+      const destinatario = "Fmcerdas1114@gmail.com";
+      const asunto = "Solicitud para eliminar la página";
+      const cuerpo = mensaje ? encodeURIComponent(mensaje) : "Hola, por favor elimina la página.";
+      window.location.href = `mailto:${destinatario}?subject=${encodeURIComponent(asunto)}&body=${cuerpo}`;
+    }
+  </script>
+</body>
+</html>
