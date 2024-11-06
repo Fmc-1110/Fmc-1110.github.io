@@ -16,6 +16,7 @@
     <textarea class="controls" id="textoEsc" placeholder="Aquí puedes escribir algo en el correo, o puedes dejarlo en blanco. "></textarea>
     <button class="botons" onclick="enviarCorreo()">Eliminar página</button>
     <p><a href="index.html">No eliminar aún</a></p>
+    <p><a href="#" onclick="mostrarAlerta()">¿No te funciona el envío de correo?</a></p>
   </section>
 
   <script>
@@ -31,6 +32,10 @@
       const cuerpo = mensaje ? encodeURIComponent(mensaje) : "Hola, por favor elimina la página.";
       window.location.href = `mailto:${destinatario}?subject=${encodeURIComponent(asunto)}&body=${cuerpo}`;
     }
+
+    function mostrarAlerta() {
+            alert("En caso de que no te funcione este botón de envío de correo, subí a mi cuenta de @autumnpenguin_ una publicación, si estás listo para que estas flores se eliminen solo dale like al post.");
+        }
   </script>
 </body>
 </html>
