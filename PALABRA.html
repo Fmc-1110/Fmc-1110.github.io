@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arma la Frase</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .word-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .letter-box {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #ccc;
+            margin: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #fff;
+        }
+        .letter-box.correct {
+            background-color: #6aaa64;
+            color: white;
+        }
+        .letter-box.wrong {
+            background-color: #d9534f;
+            color: white;
+        }
+        .letters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .letter {
+            padding: 10px 15px;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 5px;
+            border: 2px solid #ccc;
+            cursor: pointer;
+            background-color: #eee;
+            text-transform: uppercase;
+        }
+        .letter:hover {
+            background-color: #ddd;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Arma la Frase</h1>
+    <p>Selecciona las letras correctas para armar la frase de una de mis peliculas favoritas</p>
+    <h6>La frase está en inglés, es la única pista que vas a tener</h6>
+    <div class="word-container" id="wordContainer"></div>
+    <div class="letters" id="lettersContainer"></div>
+    <div class="message" id="message"></div>
+    <script>
+        const phrase = "I love you Victor but you're not mine".toUpperCase().split(" ");
+        const maxAttempts = 6; // Máximo de intentos permitidos
+        let attempts = 0; // Contador de intentos
+        let guessedLetters = []; // Letras adivinadas, inicializadas vacías
+
+        const wordContainer = document.getElementById("wordContainer");
+        const lettersContainer = document.getElementById("lettersContainer");
+        const message = document.getElementById("message");
+
+        // Crear los espacios vacíos para las palabras
+        function createWordBoxes() {
+            wordContainer.innerHTML = "";
+            guessedLetters = []; // Reiniciar letras adivinadas
+            phrase.forEach(word => {
+                const wordDiv = document.createElement("div");
+                wordDiv.classList.add("word-container");
+                for (let i = 0; i < word.length; i++) {
+                    const letterBox = document.createElement("div");
+                    letterBox.classList.add("letter-box");
+                    guessedLetters.push(""); // Inicializar espacio para cada letra
+                    wordDiv.appendChild(letterBox);
+                }
+                wordContainer.appendChild(wordDiv);
+            });
+        }
+
+        // Crear las letras aleatorias para seleccionar
+        function createLetters() {
+            const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const allLetters = phrase.join("") + alphabet; // Todas las letras de la frase + el alfabeto
+            const randomLetters = [...new Set(allLetters.split("").sort(() => 0.5 - Math.random()))]; // Mezclar letras
+            lettersContainer.innerHTML = "";
+
+            randomLetters.forEach(letter => {
+                const letterButton = document.createElement("div");
+                letterButton.classList.add("letter");
+                letterButton.textContent = letter;
+                letterButton.onclick = () => selectLetter(letter, letterButton);
+                lettersContainer.appendChild(letterButton);
+            });
+        }
+
+        // Seleccionar una letra
+        function selectLetter(letter, button) {
+    const wordString = phrase.join(""); // Cadena completa de la frase sin espacios
+    const letterIndexes = []; // Almacenará todas las posiciones de la letra seleccionada
+
+    // Buscar todas las posiciones donde la letra aparece en la frase
+    for (let i = 0; i < wordString.length; i++) {
+        if (wordString[i] === letter) {
+            letterIndexes.push(i);
+        }
+    }
+
+    // Si la letra existe en la frase, actualizar los cuadros
+    if (letterIndexes.length > 0) {
+        // Actualizamos la posición de la letra seleccionada en los cuadros
+        letterIndexes.forEach(index => {
+            guessedLetters[index] = letter;
+        });
+        button.style.backgroundColor = "#6aaa64"; // Indicar que fue correcto
+    } else {
+        button.style.backgroundColor = "#d9534f"; // Indicar que fue incorrecto
+        attempts++;
+    }
+
+    updateWordBoxes();
+    
+    // Verificamos si el jugador ha ganado o perdido
+    if (!checkWin()) {
+        checkLoss();
+    }
+}
+        // Actualizar los cuadros de letras según lo que se ha adivinado
+        function updateWordBoxes() {
+            const boxes = wordContainer.getElementsByClassName("letter-box");
+            guessedLetters.forEach((letter, index) => {
+                if (letter !== "") {
+                    boxes[index].textContent = letter;
+                    boxes[index].classList.add("correct");
+                } else {
+                    boxes[index].textContent = ""; // Asegura que los cuadros vacíos no muestren letras
+                    boxes[index].classList.remove("correct");
+                }
+            });
+        }
+
+        // Verificar si el jugador ganó
+// Verificar si el jugador ganó
+function checkWin() {
+    const guessedPhrase = guessedLetters.join(""); // Convertir las letras adivinadas en una cadena sin espacios
+    const actualPhrase = phrase.join(""); // Convertir la frase original en una cadena sin espacios
+
+    // Verificar si la frase adivinada es igual a la frase original sin espacios
+    if (guessedPhrase === actualPhrase) {
+        message.textContent = "LISTO! Completaste la frase, la última canción que te doy es All you had to do was stay, siento mucho que todas fueran de Taylor Swift y si llegaste hasta aquí gracias thanks for participating. Puedes volver a tu programación habitual.";
+        lettersContainer.innerHTML = ""; // Deshabilitar el juego (eliminar el teclado)
+    }
+}
+
+
+
+
+        // Verificar si el jugador perdió
+        function checkLoss() {
+    if (attempts >= maxAttempts) {
+        message.textContent = `¡Perdiste! La frase era: "${phrase.join(" ")}".`;
+        lettersContainer.innerHTML = ""; // Deshabilitar el juego
+    } else if (!message.textContent.includes("LISTO!")) {
+        message.textContent = `Intentos restantes: ${maxAttempts - attempts}`;
+    }
+}
+        // Inicializar el juego
+        function initGame() {
+            attempts = 0;
+            guessedLetters = [];
+            message.textContent = "";
+            createWordBoxes();
+            createLetters();
+        }
+
+        initGame();
+    </script>
+</body>
+</html>
