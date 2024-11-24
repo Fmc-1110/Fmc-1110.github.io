@@ -42,7 +42,7 @@
             <div class="resume-section-content">
                 <h1 class="mb-0">
                     ¡Hola!
-                    <span class="text-primary">Diego</span>
+                    <a style="text-decoration: none;" href="guess.html"><span class="text-primary">Diego</span></a> 
                 </h1>
                 <div class="subheading mb-5">
                     Sé que prometí hacer esto hace tiempo, pero aquí estoy
@@ -62,6 +62,7 @@
     <script src="js/scripts.js"></script>
     <script>
         window.onload = function() {
+            alert("Se realizaron cambios en la página recientemente :) y como me gusta jugar, tendrás que encontrarlos");
             document.getElementById('audio').play().catch(error => {
                 console.log("Reproducción automática bloqueada por el navegador:", error);
             });

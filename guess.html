@@ -1,0 +1,122 @@
+<!--ENCONTRASTE EL SEGUNDO JUEGO!-->
+<!--SOLO ESCRIBE EN TU BARRA DE BUSQUEDA LO QUE ESTÁ ENTRE COMILLAS-->
+<!-- " https://fmc-1110.github.io/JUEGO2.html " -->
+<!DOCTYPE html>
+
+<html lang="en">
+    
+<head>
+    <meta charset="UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adivina la canción</title>
+    <style>
+        .container {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .word {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .keyboard button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .result {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+        .guessed-words {
+            font-size: 18px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Juego 1</h1>
+        <h3>Encontraste el primer juego, adivina todas las palabras y tendrás una canción</h3>
+        <h6>(Taylor's version)</h6>
+        <div class="word" id="word"></div>
+        <div class="keyboard" id="keyboard"></div>
+        <div class="result" id="result"></div>
+        <div class="guessed-words" id="guessed-words">
+            <strong>Palabras adivinadas:</strong>
+            <ul id="guessed-list"></ul>
+        </div>
+    </div>
+    
+    <script>
+        const words = ['NOW', 'THAT', 'WE', 'DONT', 'TALK'];
+        let currentWordIndex = 0; // Índice de la palabra actual
+        let selectedWord = words[currentWordIndex]; // Palabra actual
+        let guessedLetters = [];
+        let guessedWords = []; // Lista de palabras adivinadas
+        let lives = 6;
+
+        function displayWord() {
+            let wordContainer = document.getElementById('word');
+            wordContainer.innerHTML = selectedWord.split('').map(letter => (guessedLetters.includes(letter.toLowerCase()) ? letter : '_')).join(' ');
+        }
+
+        function displayKeyboard() {
+            let keyboardContainer = document.getElementById('keyboard');
+            keyboardContainer.innerHTML = 'abcdefghijklmnopqrstuvwxyz'.split('').map(letter => 
+                `<button onclick="checkLetter('${letter}')">${letter}</button>`).join('');
+        }
+
+        function updateGuessedWords() {
+            let guessedList = document.getElementById('guessed-list');
+            guessedList.innerHTML = guessedWords.map(word => `<li>${word}</li>`).join('');
+        }
+
+        function checkLetter(letter) {
+            if (!guessedLetters.includes(letter)) {
+                guessedLetters.push(letter);
+                if (!selectedWord.toLowerCase().includes(letter)) {
+                    lives--;
+                }
+            }
+            displayWord();
+            displayKeyboard();
+            checkResult();
+        }
+
+        function checkResult() {
+            let resultContainer = document.getElementById('result');
+            if (selectedWord.split('').every(letter => guessedLetters.includes(letter.toLowerCase()))) {
+                // Palabra adivinada correctamente
+                guessedWords.push(selectedWord);
+                updateGuessedWords();
+
+                if (currentWordIndex < words.length - 1) {
+                    // Pasar a la siguiente palabra
+                    currentWordIndex++;
+                    selectedWord = words[currentWordIndex];
+                    guessedLetters = [];
+                    lives = 6;
+                    displayWord();
+                    displayKeyboard();
+                    resultContainer.innerHTML = `Adivinaste una palabra, sigue y tendrás el nombre de una canción`;
+                } else {
+                    // Todas las palabras adivinadas
+                    resultContainer.innerHTML = `¡Felicidades, adivinaste todas las palabras! Ahora tienes una canción de Taylor Swift para escuchar, una vez hecho esto, para obtener el segundo juego escribe lo que está entre comillas en tu buscador "  https://fmc-1110.github.io/JUEGO2.html " `;
+                    document.getElementById('keyboard').innerHTML = '';
+                }
+            } else if (lives === 0) {
+                resultContainer.innerHTML = `Perdiste, pero puedes buscar el siguiente juego en esta misma página, solo tienes que INSPECCIONAR su head :) `;
+                document.getElementById('keyboard').innerHTML = '';
+            } else {
+                resultContainer.innerHTML = `Vidas restantes: ${lives}`;
+            }
+        }
+
+        // Inicializar el juego
+        displayWord();
+        displayKeyboard();
+    </script>
+</body>
+</html>
